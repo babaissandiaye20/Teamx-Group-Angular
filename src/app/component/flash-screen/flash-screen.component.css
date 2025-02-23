@@ -1,0 +1,47 @@
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.logo-container {
+  text-align: center;
+}
+
+.logo-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 2rem;
+}
+
+/* .loader {
+  width: 120px;
+  height: 20px;
+  margin: 0 auto;
+  background: 
+    radial-gradient(circle 10px,#1976d2 95%,#0000) right/calc(200% + 20px) 100%,
+    linear-gradient(#1976d2 0 0) center/100% 6px; 
+  background-repeat: no-repeat; 
+  -webkit-mask: radial-gradient(circle 4px,#0000 93%,#000) right/calc(200% + 20px) 100%;
+  animation: l6 1s infinite linear;
+}
+
+@keyframes l6 {
+  100% {
+    background-position: left;
+    -webkit-mask-position: left
+  } 
+}*/

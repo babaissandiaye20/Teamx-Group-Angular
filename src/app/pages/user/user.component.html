@@ -1,0 +1,107 @@
+<app-toast></app-toast>
+
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Gestion des Utilisateurs</h1>
+    <button class="btn btn-primary" (click)="openAddModal()">
+      Ajouter un utilisateur
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="py-3 px-4 text-left">Prénom</th>
+          <th class="py-3 px-4 text-left">Nom</th>
+          <th class="py-3 px-4 text-left">Adresse</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users"
+            class="border-t"
+            [ngClass]="{'highlight-new': user._id === lastAddedId}">
+          <td class="py-3 px-4">{{ user.firstname }}</td>
+          <td class="py-3 px-4">{{ user.lastname }}</td>
+          <td class="py-3 px-4">{{ user.address }}</td>
+          <td class="py-3 px-4 text-right">
+            <div class="inline-flex gap-2">
+              <button class="action-button edit" (click)="openEditModal(user)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-button delete" (click)="openDeleteModal(user)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="users.length === 0">
+          <td colspan="4" class="py-4 text-center text-gray-500">
+            Aucun utilisateur trouvé
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-form-modal
+  [(visible)]="showFormModal"
+  [isEditing]="isEditing"
+  entityName="un utilisateur"
+  [formTemplate]="userFormTemplate"
+  [isValid]="isFormValid()"
+  (save$)="saveUser()"
+></app-form-modal>
+
+<ng-template #userFormTemplate>
+  <form [formGroup]="userForm">
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Prénom</label>
+      <input type="text" 
+             formControlName="firstname"
+             (blur)="onFieldBlur('firstname')"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
+             [ngClass]="{'border-red-500': (userForm.get('firstname')?.touched || userForm.get('firstname')?.dirty) && userForm.get('firstname')?.errors}">
+      <div *ngIf="(userForm.get('firstname')?.touched || userForm.get('firstname')?.dirty) && userForm.get('firstname')?.errors" 
+           class="text-red-500 text-sm mt-1">
+        {{ getErrorMessage('firstname') }}
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+      <input type="text" 
+             formControlName="lastname"
+             (blur)="onFieldBlur('lastname')"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
+             [ngClass]="{'border-red-500': (userForm.get('lastname')?.touched || userForm.get('lastname')?.dirty) && userForm.get('lastname')?.errors}">
+      <div *ngIf="(userForm.get('lastname')?.touched || userForm.get('lastname')?.dirty) && userForm.get('lastname')?.errors" 
+           class="text-red-500 text-sm mt-1">
+        {{ getErrorMessage('lastname') }}
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Adresse</label>
+      <input type="text" 
+             formControlName="address"
+             (blur)="onFieldBlur('address')"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
+             [ngClass]="{'border-red-500': (userForm.get('address')?.touched || userForm.get('address')?.dirty) && userForm.get('address')?.errors}">
+      <div *ngIf="(userForm.get('address')?.touched || userForm.get('address')?.dirty) && userForm.get('address')?.errors" 
+           class="text-red-500 text-sm mt-1">
+        {{ getErrorMessage('address') }}
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<app-delete-modal
+  [(visible)]="showDeleteModal"
+  entityName="utilisateur"
+  [entityPreview]="userToDelete?.firstname ?? ''"
+  [entityToDelete]="userToDelete"
+  (delete$)="deleteUser($event)"
+></app-delete-modal>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TeamxGroupAngular</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      content: ["./src/**/*.{html,ts}"],
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#10B981',
+            'primary-dark': '#059669',
+            'primary-light': '#34D399',
+            'secondary': '#1E293B',
+            'secondary-dark': '#0F172A',
+            'secondary-light': '#334155'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

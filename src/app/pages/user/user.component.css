@@ -1,0 +1,73 @@
+:root {
+  --primary: #1976d2;
+  --primary-light: #42a5f5;
+  --primary-dark: #1565c0;
+}
+
+.modal-backdrop {
+  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+}
+
+.modal {
+  @apply bg-white rounded-xl p-6 w-full max-w-md;
+}
+
+.modal-header {
+  @apply flex justify-between items-center mb-4;
+}
+
+.modal-body {
+  @apply py-4;
+}
+
+.modal-footer {
+  @apply flex justify-end gap-4 mt-6;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  @apply text-white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-outline {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--primary);
+  @apply text-white;
+}
+
+.role-badge {
+  @apply px-3 py-1 rounded-full text-sm;
+  background-color: rgba(66, 165, 245, 0.2); /* --primary-light avec opacité */
+  color: var(--primary-dark);
+}
+.newly-added {
+  background-color: rgba(0, 123, 255, 0.1); /* Couleur bleue légère */
+  transition: background-color 0.5s ease;
+}
+
+/* Animation de fondu pour la couleur bleue */
+/* Ajouter ces classes */
+@keyframes highlightFade {
+  0% {
+    background-color: rgb(219 234 254);
+    transform: translateX(-4px);
+  }
+  20% {
+    transform: translateX(0);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
