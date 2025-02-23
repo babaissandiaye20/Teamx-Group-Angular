@@ -10,7 +10,7 @@ import { ProductService } from './service/product.service';
 import { NotificationService } from '../../shared/service/notification/notification.service';
 import { ToastComponent } from '../../shared/component/toast/toast.component';
 import { CreateProductDto, UpdateProductDto } from './product';
-
+import { FcfaCurrencyPipe } from '../../fcfa-currency.pipe';
 interface ApiError {
   error?: {
     message?: string;
@@ -27,6 +27,7 @@ interface ApiError {
     FormsModule,
     FormModalComponent,
     DeleteModalComponent,
+    FcfaCurrencyPipe
   ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
