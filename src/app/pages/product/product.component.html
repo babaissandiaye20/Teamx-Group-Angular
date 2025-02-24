@@ -1,200 +1,193 @@
 <app-toast></app-toast>
-    <div class="p-6">
-      <!-- Header Section -->
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-secondary-dark">Nos Produits</h1>
-        <button class="btn btn-primary flex items-center gap-2" (click)="openAddModal()">
-          <i class="fas fa-plus"></i>
-          Ajouter un produit
+<div class="p-6">
+  <!-- Header Section -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-secondary-dark">Nos Produits</h1>
+    <button class="btn btn-primary flex items-center gap-2" (click)="openAddModal()">
+      <i class="fas fa-plus"></i>
+      Ajouter un produit
+    </button>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <ng-container *ngIf="(products$ | async) as products">
+      <!-- Skeleton Loading State -->
+      <div *ngIf="isLoading" class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-skeleton
+          *ngFor="let i of [1,2,3,4,5,6]"
+          [loading]="true"
+          type="card"
+          containerClass="w-full h-72"
+        ></app-skeleton>
+      </div>
+      
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && products.length === 0" 
+           class="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
+        <i class="fas fa-box-open text-4xl mb-4"></i>
+        <p>Aucun produit disponible</p>
+        <button class="btn btn-primary mt-4" (click)="openAddModal()">
+          Ajouter votre premier produit
         </button>
       </div>
 
-      <!-- Products Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ng-container *ngIf="(products$ | async) as products">
-          <!-- Skeleton Loading State -->
-         <!-- Skeleton Loading State -->
-<div *ngIf="isLoading" class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  <app-skeleton
-    *ngFor="let i of [1,2,3,4,5,6]"
-    [loading]="true"
-    type="card"
-    containerClass="w-full h-72"
-  ></app-skeleton>
-</div>
-          <!-- Empty State -->
-          <div *ngIf="!isLoading && products.length === 0" 
-               class="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
-            <i class="fas fa-box-open text-4xl mb-4"></i>
-            <p>Aucun produit disponible</p>
-            <button class="btn btn-primary mt-4" (click)="openAddModal()">
-              Ajouter votre premier produit
-            </button>
+      <!-- Product Cards -->
+      <ng-container *ngIf="!isLoading">
+        <div *ngFor="let product of products" 
+             class="bg-white rounded-lg shadow-md overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+          <!-- Product Image Section -->
+          <div class="relative">
+            <img [src]="product.image" 
+                 [alt]="product.name"
+                 class="w-full h-48 object-cover"
+                 onerror="this.src='/assets/images/placeholder.png'">
+            
+            <!-- Action Buttons -->
+            <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <button class="btn bg-white text-primary hover:text-primary-dark p-2 rounded-full shadow-lg"
+                      (click)="editProduct(product)"
+                      title="Modifier">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn bg-white text-red-500 hover:text-red-700 p-2 rounded-full shadow-lg"
+                      (click)="onDeleteClick(product)"
+                      type="button">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           </div>
 
-          <!-- Product Cards -->
-          <ng-container *ngIf="!isLoading">
-            <div *ngFor="let product of products" 
-                 class="bg-white rounded-lg shadow-md overflow-hidden group hover:shadow-lg transition-shadow duration-300">
-              <!-- Product Image Section -->
-              <div class="relative">
-                <img [src]="product.image" 
-                     [alt]="product.name"
-                     class="w-full h-48 object-cover"
-                     onerror="this.src='/assets/images/placeholder.png'">
-                
-                <!-- Action Buttons -->
-                <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <button class="btn bg-white text-primary hover:text-primary-dark p-2 rounded-full shadow-lg"
-                          (click)="editProduct(product)"
-                          title="Modifier">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn bg-white text-red-500 hover:text-red-700 p-2 rounded-full shadow-lg"
-                          (click)="onDeleteClick(product)"
-                          type="button">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Product Info -->
-              <div class="p-4">
-                <h3 class="text-xl font-semibold text-secondary-dark mb-2">{{ product.name }}</h3>
-                <div class="flex justify-between items-center">
-                  <span class="text-primary font-bold">
-                    {{ product.price | fcfa }}
-                  </span>
-                  <span [class]="product.quantity > 0 ? 'text-green-600' : 'text-red-600'" class="font-semibold">
-                    {{ product.quantity > 0 ? product.quantity + ' en stock' : 'Rupture de stock' }}
-                  </span>
-                </div>
-              </div>
+          <!-- Product Info -->
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-secondary-dark mb-2">{{ product.name }}</h3>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-bold">
+                {{ product.price | fcfa }}
+              </span>
+              <span [class]="product.quantity > 0 ? 'text-green-600' : 'text-red-600'" class="font-semibold">
+                {{ product.quantity > 0 ? product.quantity + ' en stock' : 'Rupture de stock' }}
+              </span>
             </div>
-          </ng-container>
-        </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Product Form Modal -->
+<app-form-modal
+  [(visible)]="showFormModal"
+  [isEditing]="isEditing"
+  entityName="un produit"
+  [formTemplate]="productFormTemplate"
+  [isValid]="productForm.valid && (!formErrors['image'])"
+  (save$)="saveProduct()">
+</app-form-modal>
+
+<!-- Product Form Template -->
+<ng-template #productFormTemplate>
+  <form [formGroup]="productForm" class="space-y-4">
+    <!-- Image Upload Field -->
+    <div class="form-group">
+      <label class="block text-gray-700 text-sm font-bold mb-2">
+        Image du produit {{ isEditing ? '' : '*' }}
+      </label>
+      <div class="flex flex-col items-center gap-4">
+        <!-- Image Preview -->
+        <div class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden flex items-center justify-center"
+             [class.border-red-500]="hasFieldError('image')">
+          <img *ngIf="previewImage" 
+               [src]="previewImage" 
+               class="max-w-full max-h-full object-contain"
+               alt="Aperçu du produit">
+          <div *ngIf="!previewImage" 
+               class="text-gray-500 text-center p-4 cursor-pointer"
+               (click)="fileInput.click()">
+            <i class="fas fa-cloud-upload-alt text-3xl mb-2"></i>
+            <p>Cliquez ou déposez une image ici</p>
+          </div>
+        </div>
+        
+        <!-- File Input -->
+        <input type="file"
+               #fileInput
+               (change)="onFileSelected($event)"
+               accept="image/*"
+               class="hidden">
+        
+        <!-- Custom Upload Button -->
+        <button type="button"
+                (click)="fileInput.click()"
+                class="btn btn-outline-primary">
+          <i class="fas fa-upload mr-2"></i>
+          {{ previewImage ? 'Changer l\'image' : 'Télécharger une image' }}
+        </button>
+        
+        <small class="text-red-500" *ngIf="hasFieldError('image')">
+          {{ getFieldError('image') }}
+        </small>
       </div>
     </div>
 
-    <!-- Product Form Modal -->
-    <app-form-modal
-      [(visible)]="showFormModal"
-      [isEditing]="isEditing"
-      entityName="un produit"
-      [formTemplate]="productFormTemplate"
-      [isValid]="isFormValid()"
-      (save$)="saveProduct($event)">
-    </app-form-modal>
+    <!-- Name Field -->
+    <div class="form-group">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+        Nom du produit *
+      </label>
+      <input type="text"
+             id="name"
+             formControlName="name"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
+             [class.border-red-500]="isFieldTouched('name') && productForm.get('name')?.invalid">
+      <small class="text-red-500" *ngIf="isFieldTouched('name') && productForm.get('name')?.invalid">
+        {{ getFieldError('name') || productValidator.getErrorMessage('name', productForm.get('name')?.errors || {}) }}
+      </small>
+    </div>
 
-    <!-- Product Form Template -->
-    <ng-template #productFormTemplate>
-      <form #productForm="ngForm" class="space-y-4">
-        <!-- Image Upload Field -->
-        <div class="form-group">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Image du produit {{ isEditing ? '' : '*' }}
-          </label>
-          <div class="flex flex-col items-center gap-4">
-            <!-- Image Preview -->
-            <div class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden flex items-center justify-center">
-              <img *ngIf="previewImage" 
-                   [src]="previewImage" 
-                   class="max-w-full max-h-full object-contain"
-                   alt="Aperçu du produit">
-              <div *ngIf="!previewImage" 
-                   class="text-gray-500 text-center p-4 cursor-pointer"
-                   (click)="fileInput.click()">
-                <i class="fas fa-cloud-upload-alt text-3xl mb-2"></i>
-                <p>Cliquez ou déposez une image ici</p>
-              </div>
-            </div>
-            
-            <!-- File Input -->
-            <input type="file"
-                   #fileInput
-                   (change)="onFileSelected($event)"
-                   accept="image/*"
-                   class="hidden">
-            
-            <!-- Custom Upload Button -->
-            <button type="button"
-                    (click)="fileInput.click()"
-                    class="btn btn-outline-primary">
-              <i class="fas fa-upload mr-2"></i>
-              {{ previewImage ? 'Changer l\'image' : 'Télécharger une image' }}
-            </button>
-            
-            <small class="text-red-500" 
-                   *ngIf="productForm.submitted && !isEditing && !selectedFile">
-              L'image est requise pour un nouveau produit
-            </small>
-          </div>
-        </div>
+    <!-- Price Field -->
+    <div class="form-group">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="price">
+        Prix *
+      </label>
+      <input type="number"
+             id="price"
+             formControlName="price"
+             min="0"
+             step="0.01"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
+             [class.border-red-500]="isFieldTouched('price') && productForm.get('price')?.invalid">
+      <small class="text-red-500" *ngIf="isFieldTouched('price') && productForm.get('price')?.invalid">
+        {{ getFieldError('price') || productValidator.getErrorMessage('price', productForm.get('price')?.errors || {}) }}
+      </small>
+    </div>
 
-        <!-- Name Field -->
-        <div class="form-group">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-            Nom du produit *
-          </label>
-          <input type="text"
-                 id="name"
-                 name="name"
-                 [(ngModel)]="currentProduct.name"
-                 required
-                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
-                 [class.border-red-500]="productForm.submitted && !currentProduct.name">
-          <small class="text-red-500" *ngIf="productForm.submitted && !currentProduct.name">
-            Le nom est requis
-          </small>
-        </div>
+    <!-- Quantity Field -->
+    <div class="form-group">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="quantity">
+        Quantité *
+      </label>
+      <input type="number"
+             id="quantity"
+             formControlName="quantity"
+             min="0"
+             step="1"
+             class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
+             [class.border-red-500]="isFieldTouched('quantity') && productForm.get('quantity')?.invalid">
+      <small class="text-red-500" *ngIf="isFieldTouched('quantity') && productForm.get('quantity')?.invalid">
+        {{ getFieldError('quantity') || productValidator.getErrorMessage('quantity', productForm.get('quantity')?.errors || {}) }}
+      </small>
+    </div>
+  </form>
+</ng-template>
 
-        <!-- Price Field -->
-        <div class="form-group">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="price">
-            Prix *
-          </label>
-          <input type="number"
-                 id="price"
-                 name="price"
-                 [(ngModel)]="currentProduct.price"
-                 required
-                 min="0"
-                 step="0.01"
-                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
-                 [class.border-red-500]="productForm.submitted && (currentProduct.price === undefined || currentProduct.price < 0)">
-          <small class="text-red-500" 
-                 *ngIf="productForm.submitted && (currentProduct.price === undefined || currentProduct.price < 0)">
-            Le prix doit être un nombre positif
-          </small>
-        </div>
-
-        <!-- Quantity Field -->
-        <div class="form-group">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="quantity">
-            Quantité *
-          </label>
-          <input type="number"
-                 id="quantity"
-                 name="quantity"
-                 [(ngModel)]="currentProduct.quantity"
-                 required
-                 min="0"
-                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-primary"
-                 [class.border-red-500]="productForm.submitted && (currentProduct.quantity === undefined || currentProduct.quantity < 0)">
-          <small class="text-red-500" 
-                 *ngIf="productForm.submitted && (currentProduct.quantity === undefined || currentProduct.quantity < 0)">
-            La quantité doit être un nombre positif
-          </small>
-        </div>
-      </form>
-    </ng-template>
-
-    <!-- Delete Confirmation Modal -->
-    <app-delete-modal
-      [(visible)]="showDeleteModal"
-      [title]="'Confirmer la suppression'"
-      entityName="produit"
-      [entityPreview]="productToDelete?.name ?? ''"
-      [entityToDelete]="productToDelete"
-      (delete$)="deleteProduct($event)"
-    ></app-delete-modal>
+<!-- Delete Confirmation Modal -->
+<app-delete-modal
+  [(visible)]="showDeleteModal"
+  [title]="'Confirmer la suppression'"
+  entityName="produit"
+  [entityPreview]="productToDelete?.name ?? ''"
+  [entityToDelete]="productToDelete"
+  (delete$)="deleteProduct($event)">
+</app-delete-modal>

@@ -1,17 +1,16 @@
 <div class="modal-backdrop" *ngIf="visible">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="text-xl font-semibold">{{ isEditing ? 'Modifier' : 'Ajouter' }} {{ entityName }}</h2>
-        <button class="text-gray-500 hover:text-gray-700" (click)="close()">×</button>
-      </div>
-      <div class="modal-body">
-        <ng-container *ngTemplateOutlet="formTemplate; context: { $implicit: currentEntity }"></ng-container>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" (click)="close()">Annuler</button>
-        <button class="btn btn-primary" [disabled]="!isValid" (click)="save()">
-          {{ isEditing ? 'Modifier' : 'Ajouter' }}
-        </button>
-      </div>
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="text-xl font-semibold">{{ isEditing ? 'Modifier' : 'Ajouter' }} {{ entityName }}</h2>
+      <button class="text-gray-500 hover:text-gray-700" (click)="close()">×</button>
+    </div>
+    <div class="modal-body">
+      <ng-container *ngTemplateOutlet="formTemplate; context: { $implicit: currentEntity }"></ng-container>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" [disabled]="!isValid" (click)="save()">
+        {{ isEditing ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
+</div>

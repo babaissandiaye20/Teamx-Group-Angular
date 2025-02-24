@@ -195,6 +195,7 @@ export class UserComponent implements OnInit {
           this.notificationService.success('Utilisateur supprimé avec succès!');
           this.refreshUsers();
         },
+
         error: (error) => {
           this.notificationService.error('Erreur lors de la suppression de l\'utilisateur');
           console.error('Error deleting user:', error);

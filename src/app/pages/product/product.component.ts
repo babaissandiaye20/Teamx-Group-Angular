@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, catchError, finalize, delay } from 'rxjs/operators';
 import { FormModalComponent } from '../../shared/component/form-modal/form-modal.component';
@@ -12,6 +12,7 @@ import { NotificationService } from '../../shared/service/notification/notificat
 import { ToastComponent } from '../../shared/component/toast/toast.component';
 import { CreateProductDto, UpdateProductDto } from './product';
 import { FcfaCurrencyPipe } from '../../fcfa-currency.pipe';
+import { ProductValidator } from './product.validator';
 
 interface ApiError {
   error?: {
@@ -27,6 +28,7 @@ interface ApiError {
     ToastComponent,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     FormModalComponent,
     DeleteModalComponent,
     FcfaCurrencyPipe,
@@ -46,20 +48,39 @@ export class ProductComponent implements OnInit {
   selectedFile: File | null = null;
   previewImage: string | undefined | null | File = null;
 
+  productForm!: FormGroup;
+  formErrors: { [key: string]: string } = {};
+
   showDeleteModal = false;
   productToDelete: Product | null = null;
 
-  private readonly ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-  private readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-
   constructor(
     private productService: ProductService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public productValidator: ProductValidator,  
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
-    this.resetForm();
+    this.initForm();
+  }
+
+  private initForm(): void {
+    this.productForm = this.fb.group({
+      name: ['', [
+        Validators.required,
+        (control: AbstractControl<any, any>) => this.productValidator.validateName(control)
+      ]],
+      price: [0, [
+        Validators.required,
+        (control: AbstractControl<any, any>) => this.productValidator.validatePrice(control)
+      ]],
+      quantity: [0, [
+        Validators.required,
+        (control: AbstractControl<any, any>) => this.productValidator.validateQuantity(control)
+      ]]
+    });
   }
 
   private loadProducts(): void {
@@ -90,26 +111,15 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  validateFile(file: File): string | null {
-    if (!this.ALLOWED_FILE_TYPES.includes(file.type)) {
-      return 'Format de fichier non supporté. Utilisez JPG, PNG ou GIF.';
-    }
-
-    if (file.size > this.MAX_FILE_SIZE) {
-      return 'Le fichier est trop volumineux (maximum 10MB)';
-    }
-
-    return null;
-  }
-
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
       
-      const validationError = this.validateFile(file);
-      if (validationError) {
-        this.notificationService.error(validationError);
+      const validationErrors = this.productValidator.validateImage(file);
+      if (validationErrors) {
+        this.formErrors['image'] = this.productValidator.getErrorMessage('image', validationErrors);
+        this.notificationService.error(this.formErrors['image']);
         input.value = '';
         this.selectedFile = null;
         this.previewImage = null;
@@ -117,6 +127,7 @@ export class ProductComponent implements OnInit {
       }
 
       this.selectedFile = file;
+      this.formErrors['image'] = '';
       
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -131,42 +142,66 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  async saveProduct(product: Partial<Product>): Promise<void> {
-    if (!this.isFormValid()) {
-      this.notificationService.error("Veuillez remplir tous les champs obligatoires");
+  validateForm(): boolean {
+    this.formErrors = {};
+    let isValid = true;
+
+    // Validate form fields
+    Object.keys(this.productForm.controls).forEach(key => {
+      const control = this.productForm.get(key);
+      control?.markAsTouched();
+      
+      if (control?.invalid) {
+        this.formErrors[key] = this.productValidator.getErrorMessage(
+          key, 
+          control.errors || {}
+        );
+        isValid = false;
+      }
+    });
+
+    // Validate image for new products
+    if (!this.isEditing) {
+      const imageErrors = this.productValidator.validateImage(this.selectedFile);
+      if (imageErrors) {
+        this.formErrors['image'] = this.productValidator.getErrorMessage('image', imageErrors);
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  async saveProduct(): Promise<void> {
+    if (!this.validateForm()) {
+      const errorMessages = Object.values(this.formErrors);
+      if (errorMessages.length > 0) {
+        this.notificationService.error(errorMessages[0]);
+      }
       return;
     }
 
     try {
-      this.isLoading = true; // Active le skeleton pendant la sauvegarde
+      this.isLoading = true;
+      
+      const formValue = this.productForm.value;
+      
       if (this.isEditing && this.currentProduct._id) {
         const updateData: UpdateProductDto = {
-          name: this.currentProduct.name,
-          price: typeof this.currentProduct.price === 'number' 
-                 ? this.currentProduct.price 
-                 : Number(this.currentProduct.price),
-          quantity: typeof this.currentProduct.quantity === 'number'
-                   ? this.currentProduct.quantity
-                   : Number(this.currentProduct.quantity),
+          name: formValue.name,
+          price: formValue.price,
+          quantity: formValue.quantity,
           image: this.selectedFile || undefined
         };
         
         await this.productService.update(this.currentProduct._id, updateData).toPromise();
         this.notificationService.success('Produit modifié avec succès');
       } else {
-        if (!this.currentProduct.name || this.currentProduct.price === undefined || this.currentProduct.quantity === undefined) {
-          throw new Error("Tous les champs sont requis pour la création d'un produit");
-        }
-        
         const createData: CreateProductDto = {
-          name: this.currentProduct.name.trim(),
-          price: typeof this.currentProduct.price === 'number'
-                 ? this.currentProduct.price
-                 : Number(this.currentProduct.price),
-          quantity: typeof this.currentProduct.quantity === 'number'
-                   ? this.currentProduct.quantity
-                   : Number(this.currentProduct.quantity),
-          image: this.selectedFile || undefined
+          name: formValue.name.trim(),
+          price: formValue.price,
+          quantity: formValue.quantity,
+          image: this.selectedFile as File
         };
         
         await this.productService.create(createData).toPromise();
@@ -174,7 +209,7 @@ export class ProductComponent implements OnInit {
       }
 
       this.showFormModal = false;
-      await this.loadProducts(); // Recharge les produits avec le skeleton
+      await this.loadProducts();
       this.resetForm();
     } catch (error: unknown) {
       const apiError = error as ApiError;
@@ -187,6 +222,7 @@ export class ProductComponent implements OnInit {
       }
       
       this.notificationService.error(errorMessage);
+      this.isLoading = false;
     }
   }
 
@@ -201,12 +237,12 @@ export class ProductComponent implements OnInit {
 
   deleteProduct(product: Product) {
     if (product && product._id) {
-      this.isLoading = true; // Active le skeleton pendant la suppression
+      this.isLoading = true;
       this.productService.delete(product._id).subscribe({
         next: () => {
           this.showDeleteModal = false;
           this.notificationService.success('Produit supprimé avec succès');
-          this.loadProducts(); // Recharge les produits avec le skeleton
+          this.loadProducts();
         },
         error: (error) => {
           console.error('Erreur lors de la suppression:', error);
@@ -231,36 +267,35 @@ export class ProductComponent implements OnInit {
   editProduct(product: Product): void {
     this.resetForm();
     this.isEditing = true;
+    
+    this.productForm.patchValue({
+      name: product.name,
+      price: product.price,
+      quantity: product.quantity
+    });
+    
     this.currentProduct = { ...product };
     this.previewImage = product.image;
     this.showFormModal = true;
   }
 
   private resetForm(): void {
-    this.currentProduct = {
-      name: '',
-      price: 0,
-      quantity: 0,
-      image: null
-    };
+    this.initForm();
+    this.formErrors = {};
+    this.currentProduct = {};
     this.selectedFile = null;
     this.previewImage = null;
   }
 
-  isFormValid(): boolean {
-    if (!this.showFormModal) {
-      return true;
-    }
-    
-    return this.isEditing
-      ? !!(this.currentProduct.name?.trim()) &&
-        this.currentProduct.quantity !== undefined &&
-        this.currentProduct.price !== undefined
-      : !!(this.currentProduct.name?.trim()) &&
-        this.currentProduct.quantity !== undefined &&
-        this.currentProduct.quantity >= 0 &&
-        this.currentProduct.price !== undefined &&
-        this.currentProduct.price >= 0 &&
-        !!(this.selectedFile || this.previewImage);
+  getFieldError(fieldName: string): string {
+    return this.formErrors[fieldName] || '';
+  }
+
+  hasFieldError(fieldName: string): boolean {
+    return !!this.formErrors[fieldName];
+  }
+
+  isFieldTouched(fieldName: string): boolean {
+    return this.productForm.get(fieldName)?.touched || false;
   }
 }
