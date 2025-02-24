@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, finalize, delay } from 'rxjs/operators';
 import { FormModalComponent } from '../../shared/component/form-modal/form-modal.component';
 import { DeleteModalComponent } from '../../shared/component/delete-modal/delete-modal.component';
+import { SkeletonComponent } from '../../shared/skeleton/skeleton.component';
 import { Product } from './product';
 import { ProductService } from './service/product.service';
 import { NotificationService } from '../../shared/service/notification/notification.service';
 import { ToastComponent } from '../../shared/component/toast/toast.component';
 import { CreateProductDto, UpdateProductDto } from './product';
 import { FcfaCurrencyPipe } from '../../fcfa-currency.pipe';
+
 interface ApiError {
   error?: {
     message?: string;
@@ -27,7 +29,8 @@ interface ApiError {
     FormsModule,
     FormModalComponent,
     DeleteModalComponent,
-    FcfaCurrencyPipe
+    FcfaCurrencyPipe,
+    SkeletonComponent
   ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
@@ -35,6 +38,7 @@ interface ApiError {
 export class ProductComponent implements OnInit {
   private productsSubject = new BehaviorSubject<Product[]>([]);
   products$ = this.productsSubject.asObservable();
+  isLoading = true;
   
   showFormModal = false;
   isEditing = false;
@@ -46,7 +50,7 @@ export class ProductComponent implements OnInit {
   productToDelete: Product | null = null;
 
   private readonly ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-  private readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 5MB
+  private readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
   constructor(
     private productService: ProductService,
@@ -59,6 +63,7 @@ export class ProductComponent implements OnInit {
   }
 
   private loadProducts(): void {
+    this.isLoading = true;
     this.productService.getAll().pipe(
       map((response: any) => {
         if (response?.data?.data) {
@@ -71,10 +76,14 @@ export class ProductComponent implements OnInit {
         console.error('Format de données invalide:', response);
         return [];
       }),
+      delay(800),
       catchError(error => {
         this.notificationService.error('Erreur lors du chargement des produits');
         console.error('Error loading products:', error);
         return [];
+      }),
+      finalize(() => {
+        this.isLoading = false;
       })
     ).subscribe(products => {
       this.productsSubject.next(products);
@@ -87,7 +96,7 @@ export class ProductComponent implements OnInit {
     }
 
     if (file.size > this.MAX_FILE_SIZE) {
-      return 'Le fichier est trop volumineux (maximum 5MB)';
+      return 'Le fichier est trop volumineux (maximum 10MB)';
     }
 
     return null;
@@ -129,6 +138,7 @@ export class ProductComponent implements OnInit {
     }
 
     try {
+      this.isLoading = true; // Active le skeleton pendant la sauvegarde
       if (this.isEditing && this.currentProduct._id) {
         const updateData: UpdateProductDto = {
           name: this.currentProduct.name,
@@ -164,7 +174,7 @@ export class ProductComponent implements OnInit {
       }
 
       this.showFormModal = false;
-      this.loadProducts();
+      await this.loadProducts(); // Recharge les produits avec le skeleton
       this.resetForm();
     } catch (error: unknown) {
       const apiError = error as ApiError;
@@ -191,15 +201,17 @@ export class ProductComponent implements OnInit {
 
   deleteProduct(product: Product) {
     if (product && product._id) {
+      this.isLoading = true; // Active le skeleton pendant la suppression
       this.productService.delete(product._id).subscribe({
         next: () => {
           this.showDeleteModal = false;
           this.notificationService.success('Produit supprimé avec succès');
-          this.loadProducts();
+          this.loadProducts(); // Recharge les produits avec le skeleton
         },
         error: (error) => {
           console.error('Erreur lors de la suppression:', error);
           this.notificationService.error('Erreur lors de la suppression du produit');
+          this.isLoading = false;
         }
       });
     }
@@ -236,7 +248,6 @@ export class ProductComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    // Ne vérifier que si on est dans le contexte du formulaire
     if (!this.showFormModal) {
       return true;
     }

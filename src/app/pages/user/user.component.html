@@ -19,28 +19,42 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users"
-            class="border-t"
-            [ngClass]="{'highlight-new': user._id === lastAddedId}">
-          <td class="py-3 px-4">{{ user.firstname }}</td>
-          <td class="py-3 px-4">{{ user.lastname }}</td>
-          <td class="py-3 px-4">{{ user.address }}</td>
-          <td class="py-3 px-4 text-right">
-            <div class="inline-flex gap-2">
-              <button class="action-button edit" (click)="openEditModal(user)">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="action-button delete" (click)="openDeleteModal(user)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="users.length === 0">
-          <td colspan="4" class="py-4 text-center text-gray-500">
-            Aucun utilisateur trouvé
-          </td>
-        </tr>
+        <ng-container *ngIf="loading">
+          <tr *ngFor="let i of [1,2,3,4,5]">
+            <td colspan="4" class="p-0">
+              <app-skeleton
+                type="table-row"
+                containerClass="border-t"
+                [loading]="loading">
+              </app-skeleton>
+            </td>
+          </tr>
+        </ng-container>
+        
+        <ng-container *ngIf="!loading">
+          <tr *ngFor="let user of users"
+              class="border-t"
+              [ngClass]="{'highlight-new': user._id === lastAddedId}">
+            <td class="py-3 px-4">{{ user.firstname }}</td>
+            <td class="py-3 px-4">{{ user.lastname }}</td>
+            <td class="py-3 px-4">{{ user.address }}</td>
+            <td class="py-3 px-4 text-right">
+              <div class="inline-flex gap-2">
+                <button class="action-button edit" (click)="openEditModal(user)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-button delete" (click)="openDeleteModal(user)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0">
+            <td colspan="4" class="py-4 text-center text-gray-500">
+              Aucun utilisateur trouvé
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

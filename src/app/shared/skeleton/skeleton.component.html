@@ -1,0 +1,41 @@
+<div [ngClass]="containerClass" class="animate-pulse" *ngIf="loading">
+  <ng-container [ngSwitch]="type">
+    <!-- Card Skeleton -->
+    <div *ngSwitchCase="'card'" class="bg-gray-200 rounded-lg overflow-hidden">
+      <div class="h-48 bg-gray-300"></div>
+      <div class="p-4 space-y-3">
+        <div class="h-6 bg-gray-300 rounded w-3/4"></div>
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-300 rounded"></div>
+          <div class="h-4 bg-gray-300 rounded w-5/6"></div>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <div class="h-5 bg-gray-300 rounded w-1/4"></div>
+          <div class="h-5 bg-gray-300 rounded w-1/4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Row Skeleton -->
+    <div *ngSwitchCase="'table-row'" class="flex space-x-4 p-4 bg-gray-200">
+      <div class="h-6 bg-gray-300 rounded w-1/4"></div>
+      <div class="h-6 bg-gray-300 rounded w-1/4"></div>
+      <div class="h-6 bg-gray-300 rounded w-1/4"></div>
+      <div class="h-6 bg-gray-300 rounded w-1/4"></div>
+    </div>
+
+    <!-- List Item Skeleton -->
+    <div *ngSwitchCase="'list-item'" class="flex space-x-4 p-3 bg-gray-200">
+      <div class="h-12 w-12 bg-gray-300 rounded-full"></div>
+      <div class="flex-1 space-y-2">
+        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+      </div>
+    </div>
+
+    <!-- Default/Custom Skeleton -->
+    <div *ngSwitchDefault>
+      <ng-content></ng-content>
+    </div>
+  </ng-container>
+</div>

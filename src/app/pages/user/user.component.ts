@@ -1,3 +1,4 @@
+// user.component.ts
 import { Component, OnInit } from '@angular/core';
 import { NgClass, NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -8,7 +9,8 @@ import { NotificationService } from '../../shared/service/notification/notificat
 import { DeleteModalComponent } from '../../shared/component/delete-modal/delete-modal.component';
 import { FormModalComponent } from '../../shared/component/form-modal/form-modal.component';
 import { ToastComponent } from '../../shared/component/toast/toast.component';
-import { Observable, map, catchError, of } from 'rxjs';
+import { SkeletonComponent } from '../../shared/skeleton/skeleton.component';
+import { Observable, map, catchError, of, finalize } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -20,7 +22,8 @@ import { Observable, map, catchError, of } from 'rxjs';
     ReactiveFormsModule,
     DeleteModalComponent, 
     FormModalComponent, 
-    ToastComponent, 
+    ToastComponent,
+    SkeletonComponent,
     AsyncPipe
   ],
   templateUrl: './user.component.html',
@@ -30,6 +33,7 @@ export class UserComponent implements OnInit {
   lastAddedId: string | null = null;
   users: User[] = [];
   userForm: FormGroup;
+  loading = true;
   
   showFormModal = false;
   isEditing = false;
@@ -58,6 +62,7 @@ export class UserComponent implements OnInit {
   }
 
   private loadUsers(): Observable<User[]> {
+    this.loading = true;
     return this.userService.getAll().pipe(
       map((response: any) => {
         console.log('Response received:', response);
@@ -84,10 +89,12 @@ export class UserComponent implements OnInit {
         console.error('Error loading users:', error);
         this.notificationService.error('Erreur lors du chargement des utilisateurs');
         return of([]);
+      }),
+      finalize(() => {
+        this.loading = false;
       })
     );
   }
-
   refreshUsers() {
     this.loadUsers().subscribe(users => {
       this.users = users;

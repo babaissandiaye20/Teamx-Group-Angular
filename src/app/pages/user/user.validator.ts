@@ -7,7 +7,7 @@ import { User, CreateUserDto, UpdateUserDto } from './user';
 })
 export class UserValidator {
   private readonly NAME_PATTERN = /^[a-zA-ZÀ-ÿ\s-]{2,50}$/;
-  private readonly ADDRESS_MIN_LENGTH = 5;
+  private readonly ADDRESS_MIN_LENGTH = 2;
   private readonly ADDRESS_MAX_LENGTH = 200;
 
   validateFirstName(control: AbstractControl): ValidationErrors | null {
