@@ -1,4 +1,3 @@
-// user.component.ts
 import { Component, OnInit } from '@angular/core';
 import { NgClass, NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +9,7 @@ import { DeleteModalComponent } from '../../shared/component/delete-modal/delete
 import { FormModalComponent } from '../../shared/component/form-modal/form-modal.component';
 import { ToastComponent } from '../../shared/component/toast/toast.component';
 import { SkeletonComponent } from '../../shared/skeleton/skeleton.component';
+import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { Observable, map, catchError, of, finalize } from 'rxjs';
 
 @Component({
@@ -24,6 +24,7 @@ import { Observable, map, catchError, of, finalize } from 'rxjs';
     FormModalComponent, 
     ToastComponent,
     SkeletonComponent,
+    PaginationComponent,
     AsyncPipe
   ],
   templateUrl: './user.component.html',
@@ -31,9 +32,12 @@ import { Observable, map, catchError, of, finalize } from 'rxjs';
 })
 export class UserComponent implements OnInit {
   lastAddedId: string | null = null;
-  users: User[] = [];
+  allUsers: User[] = []; // Tous les utilisateurs
+  displayedUsers: User[] = []; // Utilisateurs de la page courante
   userForm: FormGroup;
   loading = true;
+  
+  itemsPerPage = 10; // Nombre d'éléments par page
   
   showFormModal = false;
   isEditing = false;
@@ -95,10 +99,16 @@ export class UserComponent implements OnInit {
       })
     );
   }
+  
   refreshUsers() {
     this.loadUsers().subscribe(users => {
-      this.users = users;
+      this.allUsers = users;
     });
+  }
+
+  // Méthode appelée lorsque la page change dans le composant de pagination
+  onPageChange(pageUsers: User[]) {
+    this.displayedUsers = pageUsers;
   }
 
   openAddModal() {
@@ -109,6 +119,7 @@ export class UserComponent implements OnInit {
 
   openEditModal(user: User) {
     this.isEditing = true;
+    this.userToDelete = user; // Stocker l'utilisateur à éditer
     this.userForm.patchValue({
       firstname: user.firstname,
       lastname: user.lastname,
@@ -195,7 +206,6 @@ export class UserComponent implements OnInit {
           this.notificationService.success('Utilisateur supprimé avec succès!');
           this.refreshUsers();
         },
-
         error: (error) => {
           this.notificationService.error('Erreur lors de la suppression de l\'utilisateur');
           console.error('Error deleting user:', error);

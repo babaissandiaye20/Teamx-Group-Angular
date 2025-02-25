@@ -1,3 +1,20 @@
-.bg-primary {
-    background-color: #3b82f6;
-  }
+/* Styles pour le composant de pagination */
+.pagination-content {
+  margin-top: 1rem;
+}
+
+button:not([disabled]) {
+  cursor: pointer;
+}
+
+button.bg-primary {
+  background-color: var(--color-primary, #4f46e5);
+}
+
+button:hover:not([disabled]):not(.bg-primary) {
+  background-color: #f9fafb;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
