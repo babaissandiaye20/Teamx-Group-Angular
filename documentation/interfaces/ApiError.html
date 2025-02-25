@@ -1,0 +1,585 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>teamx-group.angular documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">teamx-group.angular documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ApiError</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/pages/product/product.component.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#error" 
+>
+                                            error
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="error"></a>
+                                        <span class="name "><b>error</b>
+                                            <a href="#error">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>error:     <code>literal type</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>literal type</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl } from &#x27;@angular/forms&#x27;;
+import { Observable, BehaviorSubject } from &#x27;rxjs&#x27;;
+import { map, catchError, finalize, delay } from &#x27;rxjs/operators&#x27;;
+import { FormModalComponent } from &#x27;../../shared/component/form-modal/form-modal.component&#x27;;
+import { DeleteModalComponent } from &#x27;../../shared/component/delete-modal/delete-modal.component&#x27;;
+import { SkeletonComponent } from &#x27;../../shared/skeleton/skeleton.component&#x27;;
+import { Product } from &#x27;./product&#x27;;
+import { ProductService } from &#x27;./service/product.service&#x27;;
+import { NotificationService } from &#x27;../../shared/service/notification/notification.service&#x27;;
+import { ToastComponent } from &#x27;../../shared/component/toast/toast.component&#x27;;
+import { CreateProductDto, UpdateProductDto } from &#x27;./product&#x27;;
+import { FcfaCurrencyPipe } from &#x27;../../fcfa-currency.pipe&#x27;;
+import { ProductValidator } from &#x27;./product.validator&#x27;;
+
+interface ApiError {
+  error?: {
+    message?: string;
+    errors?: string[];
+  }; 
+}
+
+@Component({
+  selector: &#x27;app-product&#x27;,
+  standalone: true,
+  imports: [
+    ToastComponent,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FormModalComponent,
+    DeleteModalComponent,
+    FcfaCurrencyPipe,
+    SkeletonComponent
+  ],
+  templateUrl: &#x27;./product.component.html&#x27;,
+  styleUrl: &#x27;./product.component.css&#x27;
+})
+export class ProductComponent implements OnInit {
+  private productsSubject &#x3D; new BehaviorSubject&lt;Product[]&gt;([]);
+  products$ &#x3D; this.productsSubject.asObservable();
+  isLoading &#x3D; true;
+  
+  showFormModal &#x3D; false;
+  isEditing &#x3D; false;
+  currentProduct: Partial&lt;Product&gt; &#x3D; {};
+  selectedFile: File | null &#x3D; null;
+  previewImage: string | undefined | null | File &#x3D; null;
+
+  productForm!: FormGroup;
+  formErrors: { [key: string]: string } &#x3D; {};
+
+  showDeleteModal &#x3D; false;
+  productToDelete: Product | null &#x3D; null;
+
+  constructor(
+    private productService: ProductService,
+    private notificationService: NotificationService,
+    public productValidator: ProductValidator,  
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+    this.initForm();
+  }
+
+  private initForm(): void {
+    this.productForm &#x3D; this.fb.group({
+      name: [&#x27;&#x27;, [
+        Validators.required,
+        (control: AbstractControl&lt;any, any&gt;) &#x3D;&gt; this.productValidator.validateName(control)
+      ]],
+      price: [0, [
+        Validators.required,
+        (control: AbstractControl&lt;any, any&gt;) &#x3D;&gt; this.productValidator.validatePrice(control)
+      ]],
+      quantity: [0, [
+        Validators.required,
+        (control: AbstractControl&lt;any, any&gt;) &#x3D;&gt; this.productValidator.validateQuantity(control)
+      ]]
+    });
+  }
+
+  private loadProducts(): void {
+    this.isLoading &#x3D; true;
+    this.productService.getAll().pipe(
+      map((response: any) &#x3D;&gt; {
+        if (response?.data?.data) {
+          return response.data.data;
+        } else if (response?.data) {
+          return response.data;
+        } else if (Array.isArray(response)) {
+          return response;
+        }
+        console.error(&#x27;Format de données invalide:&#x27;, response);
+        return [];
+      }),
+      delay(800),
+      catchError(error &#x3D;&gt; {
+        this.notificationService.error(&#x27;Erreur lors du chargement des produits&#x27;);
+        console.error(&#x27;Error loading products:&#x27;, error);
+        return [];
+      }),
+      finalize(() &#x3D;&gt; {
+        this.isLoading &#x3D; false;
+      })
+    ).subscribe(products &#x3D;&gt; {
+      this.productsSubject.next(products);
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const input &#x3D; event.target as HTMLInputElement;
+    if (input.files &amp;&amp; input.files[0]) {
+      const file &#x3D; input.files[0];
+      
+      const validationErrors &#x3D; this.productValidator.validateImage(file);
+      if (validationErrors) {
+        this.formErrors[&#x27;image&#x27;] &#x3D; this.productValidator.getErrorMessage(&#x27;image&#x27;, validationErrors);
+        this.notificationService.error(this.formErrors[&#x27;image&#x27;]);
+        input.value &#x3D; &#x27;&#x27;;
+        this.selectedFile &#x3D; null;
+        this.previewImage &#x3D; null;
+        return;
+      }
+
+      this.selectedFile &#x3D; file;
+      this.formErrors[&#x27;image&#x27;] &#x3D; &#x27;&#x27;;
+      
+      const reader &#x3D; new FileReader();
+      reader.onload &#x3D; (e) &#x3D;&gt; {
+        this.previewImage &#x3D; e.target?.result as string;
+      };
+      reader.onerror &#x3D; () &#x3D;&gt; {
+        this.notificationService.error(&quot;Erreur lors de la lecture du fichier&quot;);
+        this.selectedFile &#x3D; null;
+        this.previewImage &#x3D; null;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  validateForm(): boolean {
+    this.formErrors &#x3D; {};
+    let isValid &#x3D; true;
+
+    // Validate form fields
+    Object.keys(this.productForm.controls).forEach(key &#x3D;&gt; {
+      const control &#x3D; this.productForm.get(key);
+      control?.markAsTouched();
+      
+      if (control?.invalid) {
+        this.formErrors[key] &#x3D; this.productValidator.getErrorMessage(
+          key, 
+          control.errors || {}
+        );
+        isValid &#x3D; false;
+      }
+    });
+
+    // Validate image for new products
+    if (!this.isEditing) {
+      const imageErrors &#x3D; this.productValidator.validateImage(this.selectedFile);
+      if (imageErrors) {
+        this.formErrors[&#x27;image&#x27;] &#x3D; this.productValidator.getErrorMessage(&#x27;image&#x27;, imageErrors);
+        isValid &#x3D; false;
+      }
+    }
+
+    return isValid;
+  }
+
+  async saveProduct(): Promise&lt;void&gt; {
+    if (!this.validateForm()) {
+      const errorMessages &#x3D; Object.values(this.formErrors);
+      if (errorMessages.length &gt; 0) {
+        this.notificationService.error(errorMessages[0]);
+      }
+      return;
+    }
+
+    try {
+      this.isLoading &#x3D; true;
+      
+      const formValue &#x3D; this.productForm.value;
+      
+      if (this.isEditing &amp;&amp; this.currentProduct._id) {
+        const updateData: UpdateProductDto &#x3D; {
+          name: formValue.name,
+          price: formValue.price,
+          quantity: formValue.quantity,
+          image: this.selectedFile || undefined
+        };
+        
+        await this.productService.update(this.currentProduct._id, updateData).toPromise();
+        this.notificationService.success(&#x27;Produit modifié avec succès&#x27;);
+      } else {
+        const createData: CreateProductDto &#x3D; {
+          name: formValue.name.trim(),
+          price: formValue.price,
+          quantity: formValue.quantity,
+          image: this.selectedFile as File
+        };
+        
+        await this.productService.create(createData).toPromise();
+        this.notificationService.success(&#x27;Produit ajouté avec succès&#x27;);
+      }
+
+      this.showFormModal &#x3D; false;
+      await this.loadProducts();
+      this.resetForm();
+    } catch (error: unknown) {
+      const apiError &#x3D; error as ApiError;
+      let errorMessage &#x3D; &quot;Erreur lors de l&#x27;enregistrement du produit&quot;;
+      
+      if (apiError.error?.errors &amp;&amp; apiError.error.errors.length &gt; 0) {
+        errorMessage &#x3D; apiError.error.errors.join(&#x27;, &#x27;);
+      } else if (apiError.error?.message) {
+        errorMessage &#x3D; apiError.error.message;
+      }
+      
+      this.notificationService.error(errorMessage);
+      this.isLoading &#x3D; false;
+    }
+  }
+
+  onDeleteClick(product: Product): void {
+    if (!product || !product._id) {
+      this.notificationService.error(&#x27;Produit invalide&#x27;);
+      return;
+    }
+    this.productToDelete &#x3D; product;
+    this.showDeleteModal &#x3D; true;
+  }
+
+  deleteProduct(product: Product) {
+    if (product &amp;&amp; product._id) {
+      this.isLoading &#x3D; true;
+      this.productService.delete(product._id).subscribe({
+        next: () &#x3D;&gt; {
+          this.showDeleteModal &#x3D; false;
+          this.notificationService.success(&#x27;Produit supprimé avec succès&#x27;);
+          this.loadProducts();
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;Erreur lors de la suppression:&#x27;, error);
+          this.notificationService.error(&#x27;Erreur lors de la suppression du produit&#x27;);
+          this.isLoading &#x3D; false;
+        }
+      });
+    }
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal &#x3D; false;
+    this.productToDelete &#x3D; null;
+  }
+
+  openAddModal(): void {
+    this.resetForm();
+    this.isEditing &#x3D; false;
+    this.showFormModal &#x3D; true;
+  }
+
+  editProduct(product: Product): void {
+    this.resetForm();
+    this.isEditing &#x3D; true;
+    
+    this.productForm.patchValue({
+      name: product.name,
+      price: product.price,
+      quantity: product.quantity
+    });
+    
+    this.currentProduct &#x3D; { ...product };
+    this.previewImage &#x3D; product.image;
+    this.showFormModal &#x3D; true;
+  }
+
+  private resetForm(): void {
+    this.initForm();
+    this.formErrors &#x3D; {};
+    this.currentProduct &#x3D; {};
+    this.selectedFile &#x3D; null;
+    this.previewImage &#x3D; null;
+  }
+
+  getFieldError(fieldName: string): string {
+    return this.formErrors[fieldName] || &#x27;&#x27;;
+  }
+
+  hasFieldError(fieldName: string): boolean {
+    return !!this.formErrors[fieldName];
+  }
+
+  isFieldTouched(fieldName: string): boolean {
+    return this.productForm.get(fieldName)?.touched || false;
+  }
+}</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ApiError.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

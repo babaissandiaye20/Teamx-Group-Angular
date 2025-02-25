@@ -9,32 +9,39 @@
     </button>
   </div>
 
-  <!-- Products Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <ng-container *ngIf="(products$ | async) as products">
-      <!-- Skeleton Loading State -->
-      <div *ngIf="isLoading" class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <app-skeleton
-          *ngFor="let i of [1,2,3,4,5,6]"
-          [loading]="true"
-          type="card"
-          containerClass="w-full h-72"
-        ></app-skeleton>
-      </div>
-      
-      <!-- Empty State -->
-      <div *ngIf="!isLoading && products.length === 0" 
-           class="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
-        <i class="fas fa-box-open text-4xl mb-4"></i>
-        <p>Aucun produit disponible</p>
-        <button class="btn btn-primary mt-4" (click)="openAddModal()">
-          Ajouter votre premier produit
-        </button>
-      </div>
+  <!-- Products avec Infinite Scroll -->
+  <ng-container *ngIf="(products$ | async) as products">
+    <!-- Skeleton Loading State -->
+    <div *ngIf="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <app-skeleton
+        *ngFor="let i of [1,2,3,4,5,6]"
+        [loading]="true"
+        type="card"
+        containerClass="w-full h-72"
+      ></app-skeleton>
+    </div>
+    
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && products.length === 0" 
+         class="flex flex-col items-center justify-center py-12 text-gray-500">
+      <i class="fas fa-box-open text-4xl mb-4"></i>
+      <p>Aucun produit disponible</p>
+      <button class="btn btn-primary mt-4" (click)="openAddModal()">
+        Ajouter votre premier produit
+      </button>
+    </div>
 
-      <!-- Product Cards -->
-      <ng-container *ngIf="!isLoading">
-        <div *ngFor="let product of products" 
+    <!-- Infinite Scroll avec les produits -->
+    <app-infinite-scroll 
+      *ngIf="!isLoading && products.length > 0"
+      [allItems]="allProducts"
+      [limit]="itemsPerLoad"
+      [loading]="isLoading"
+      (displayedItemsChange)="onDisplayedItemsChange($event)">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Product Cards -->
+        <div *ngFor="let product of displayedProducts" 
              class="bg-white rounded-lg shadow-md overflow-hidden group hover:shadow-lg transition-shadow duration-300">
           <!-- Product Image Section -->
           <div class="relative">
@@ -71,9 +78,9 @@
             </div>
           </div>
         </div>
-      </ng-container>
-    </ng-container>
-  </div>
+      </div>
+    </app-infinite-scroll>
+  </ng-container>
 </div>
 
 <!-- Product Form Modal -->

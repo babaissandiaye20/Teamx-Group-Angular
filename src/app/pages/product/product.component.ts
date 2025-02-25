@@ -13,6 +13,7 @@ import { ToastComponent } from '../../shared/component/toast/toast.component';
 import { CreateProductDto, UpdateProductDto } from './product';
 import { FcfaCurrencyPipe } from '../../fcfa-currency.pipe';
 import { ProductValidator } from './product.validator';
+import { InfiniteScrollComponent } from '../../shared/component/infinite-scroll/infinite-scroll.component';
 
 interface ApiError {
   error?: {
@@ -32,7 +33,8 @@ interface ApiError {
     FormModalComponent,
     DeleteModalComponent,
     FcfaCurrencyPipe,
-    SkeletonComponent
+    SkeletonComponent,
+    InfiniteScrollComponent
   ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
@@ -41,6 +43,11 @@ export class ProductComponent implements OnInit {
   private productsSubject = new BehaviorSubject<Product[]>([]);
   products$ = this.productsSubject.asObservable();
   isLoading = true;
+  
+  // Nouveaux attributs pour le défilement infini
+  allProducts: Product[] = [];
+  displayedProducts: Product[] = [];
+  itemsPerLoad = 10; // Nombre de produits à charger à chaque défilement
   
   showFormModal = false;
   isEditing = false;
@@ -107,8 +114,14 @@ export class ProductComponent implements OnInit {
         this.isLoading = false;
       })
     ).subscribe(products => {
+      this.allProducts = products;
       this.productsSubject.next(products);
     });
+  }
+
+  // Méthode appelée lorsque les produits affichés changent
+  onDisplayedItemsChange(items: Product[]): void {
+    this.displayedProducts = items;
   }
 
   onFileSelected(event: Event): void {
