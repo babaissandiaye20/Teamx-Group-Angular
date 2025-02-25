@@ -4,28 +4,30 @@
   --primary-dark: #1565c0;
 }
 
+/* Base styles with responsive adjustments */
 .modal-backdrop {
-  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4;
 }
 
 .modal {
-  @apply bg-white rounded-xl p-6 w-full max-w-md;
+  @apply bg-white rounded-xl p-4 w-full max-w-md overflow-y-auto max-h-[90vh] sm:p-6;
 }
 
 .modal-header {
-  @apply flex justify-between items-center mb-4;
+  @apply flex justify-between items-center mb-3 sm:mb-4;
 }
 
 .modal-body {
-  @apply py-4;
+  @apply py-3 sm:py-4;
 }
 
 .modal-footer {
-  @apply flex justify-end gap-4 mt-6;
+  @apply flex flex-col sm:flex-row sm:justify-end gap-2 sm:gap-4 mt-4 sm:mt-6;
 }
 
+/* Responsive buttons */
 .btn {
-  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  @apply px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base w-full sm:w-auto;
 }
 
 .btn-primary {
@@ -40,6 +42,7 @@
 .btn-outline {
   border: 2px solid var(--primary);
   color: var(--primary);
+  @apply flex-1 sm:flex-initial;
 }
 
 .btn-outline:hover {
@@ -48,17 +51,36 @@
 }
 
 .role-badge {
-  @apply px-3 py-1 rounded-full text-sm;
-  background-color: rgba(66, 165, 245, 0.2); /* --primary-light avec opacité */
+  @apply px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm inline-flex items-center justify-center;
+  background-color: rgba(66, 165, 245, 0.2);
   color: var(--primary-dark);
 }
-.newly-added {
-  background-color: rgba(0, 123, 255, 0.1); /* Couleur bleue légère */
-  transition: background-color 0.5s ease;
+
+/* Table responsive adjustments */
+@media (max-width: 640px) {
+  .overflow-x-auto {
+    @apply -mx-6;
+  }
+  
+  table {
+    @apply w-full;
+  }
+  
+  th, td {
+    @apply text-sm py-2 px-3;
+  }
+  
+  .action-button {
+    @apply p-1.5;
+  }
 }
 
-/* Animation de fondu pour la couleur bleue */
-/* Ajouter ces classes */
+/* Highlight animation for newly added items */
+.newly-added,
+.highlight-new {
+  animation: highlightFade 3s ease forwards;
+}
+
 @keyframes highlightFade {
   0% {
     background-color: rgb(219 234 254);
@@ -70,4 +92,27 @@
   100% {
     background-color: transparent;
   }
+}
+
+/* Action buttons responsive styles */
+.action-button {
+  @apply inline-flex items-center justify-center rounded-full w-8 h-8 transition-colors;
+}
+
+.action-button.edit {
+  @apply text-blue-600 hover:bg-blue-100;
+}
+
+.action-button.delete {
+  @apply text-red-600 hover:bg-red-100;
+}
+
+/* Form responsive adjustments */
+input[type="text"] {
+  @apply text-sm sm:text-base;
+}
+
+/* Empty state message */
+.text-center.text-gray-500 {
+  @apply py-8;
 }

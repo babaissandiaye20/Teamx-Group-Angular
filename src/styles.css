@@ -84,3 +84,24 @@
   width: 100%;
   max-width: 28rem;
 }
+/* Variables globales */
+:root {
+  --primary: #1976d2;
+  --primary-light: #42a5f5;
+  --primary-dark: #1565c0;
+  --secondary-dark: #333;
+}
+
+/* Styles de base */
+html, body {
+  @apply h-full m-0 p-0;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 flex flex-col min-h-screen;
+}
+
+/* Layout responsive */
+.container {
+  @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+}
